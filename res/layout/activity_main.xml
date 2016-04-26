@@ -1,0 +1,126 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+        android:id="@+id/surfaceLayout"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    
+    <LinearLayout 
+        android:id="@+id/con_mod_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <Button 
+                android:id="@+id/change_mod_ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change"
+                />
+            <EditText 
+                android:id="@+id/mod_ip_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="MODULE ADDRESS"
+                />
+        </LinearLayout>
+        <Button 
+                android:id="@+id/connect_mod"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Connect"
+                />
+    </LinearLayout>
+    
+  	<LinearLayout
+  	    android:id="@+id/testLayout"
+  	    android:orientation="horizontal"
+  	    android:layout_width="fill_parent"
+  	    android:layout_height="wrap_content" >
+
+  	    <Button
+  	        android:id="@+id/takePhoto"
+  	        android:layout_weight="1"
+  	        android:layout_width="fill_parent"
+  	        android:layout_height="wrap_content"
+  	        android:text="Test capture" />
+
+  	    <Button
+  	        android:id="@+id/getLog"
+  	        android:layout_weight="1"
+  	        android:layout_width="fill_parent"
+  	        android:layout_height="wrap_content"
+  	        android:text="Get log" />
+  	    <Button
+  	        android:id="@+id/delLog"
+  	        android:layout_weight="1"
+  	        android:layout_width="fill_parent"
+  	        android:layout_height="wrap_content"
+  	        android:text="Delete log" />
+  	</LinearLayout>
+  	
+  	<LinearLayout
+  	    android:id="@+id/configLayout"
+  	    android:visibility="gone"
+  	    android:orientation="vertical"
+  	    android:layout_width="fill_parent"
+  	    android:layout_height="wrap_content" >
+
+  	    <EditText
+  	        android:id="@+id/ssid"
+  	        android:layout_width="fill_parent"
+  	        android:layout_height="wrap_content"
+  	        android:hint="WIFI SSID" />
+
+  	    <EditText
+  	        android:id="@+id/wifipass"
+  	        android:layout_width="fill_parent"
+  	        android:layout_height="wrap_content"
+  	        android:hint="WIFI Password"
+  	        android:inputType="numberDecimal" />
+
+  	    <EditText
+  	        android:id="@+id/ip"
+  	        android:layout_width="fill_parent"
+  	        android:layout_height="wrap_content"
+  	        android:hint="IP Address"
+  	        android:inputType="numberDecimal" />
+
+  	    <EditText
+  	        android:id="@+id/host"
+  	        android:layout_width="fill_parent"
+  	        android:layout_height="wrap_content"
+  	        android:hint="Host"
+  	        android:inputType="numberDecimal" />
+  	</LinearLayout>
+
+    <TextView
+        android:id="@+id/infoip"
+        android:textColor="#FF0000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+
+</LinearLayout>
