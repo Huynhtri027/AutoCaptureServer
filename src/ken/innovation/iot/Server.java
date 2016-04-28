@@ -24,10 +24,11 @@ public class Server {
 	ServerSocket serverSocket;
 	String message = "";
 	static final int socketServerPORT = 6690;
+	SocketServerThread socketServerThread = null;
 
 	public Server(MainActivity activity) {
 		this.activity = activity;
-		Thread socketServerThread = new Thread(new SocketServerThread());
+		socketServerThread = new SocketServerThread();
 		socketServerThread.start();
 	}
 
@@ -38,6 +39,7 @@ public class Server {
 	public void onDestroy() {
 		if (serverSocket != null) {
 			try {
+				socketServerThread.isStop = true;
 				serverSocket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -47,13 +49,14 @@ public class Server {
 	}
 
 	private class SocketServerThread extends Thread {
+		public boolean isStop = false;
 
 		@Override
 		public void run() {
 			try {
 				serverSocket = new ServerSocket(socketServerPORT);
 
-				while (!isInterrupted()) {
+				while (!isStop && !isInterrupted()) {
 					Socket socket = serverSocket.accept();
 					
 					new SocketGetDataThread(socket).start();
@@ -74,8 +77,9 @@ public class Server {
 //		private Socket socket;
 		BufferedReader input;
 		private boolean isStop = false;
+		Socket socket;
 		public SocketGetDataThread(Socket socket){
-//			this.socket = socket;
+			this.socket = socket;
 			try {
 				input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			} catch (IOException e) {
@@ -87,7 +91,7 @@ public class Server {
 		@Override
 		public void run() {
 			int count = 0;
-			while (!isStop && !isInterrupted()){
+			while (!isStop && !isInterrupted() && !socket.isClosed()){
 				try {
 					final String s = input.readLine();
 					if (s == null){
@@ -102,7 +106,7 @@ public class Server {
 						@Override
 						public void run() {
 							if (s.contains("1")){
-								activity.takePhoto();
+								activity.captureTask.startCapture();
 							}
 						}
 					});

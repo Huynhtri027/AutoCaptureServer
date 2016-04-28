@@ -16,7 +16,7 @@ public class LogUtils {
 	   try {
 		   Log.d("IoT", text);
 		   synchronized (lock) {
-			   File logFile = new File(CameraUtils.getDataPath()+ "log.txt");
+			   File logFile = new File(FileUtils.getDataPath()+ "log.txt");
 			   if (!logFile.exists())
 			   {
 				   try
@@ -50,7 +50,7 @@ public class LogUtils {
 	public static String getLog() {
 		try {
 			synchronized (lock) {
-				File logFile = new File(CameraUtils.getDataPath()+ "log.txt");
+				File logFile = new File(FileUtils.getDataPath()+ "log.txt");
 				if (!logFile.exists()) return null;
 				StringBuilder builder = new StringBuilder();
 				try {
@@ -78,7 +78,7 @@ public class LogUtils {
 	
 	public static void clearLog(){
 		synchronized (lock) {
-			File file = new File(CameraUtils.getDataPath());
+			File file = new File(FileUtils.getDataPath());
 			if (file.exists()){
 				recursiveDelete(file.getPath());
 			}

@@ -66,7 +66,7 @@
 //                        @Override
 //                        public void onPictureTaken(byte[] data, Camera camera) {
 //                        	LogUtils.appendLog("4. Took picture");
-//                            final Uri uri = CameraUtils.onPictureTaken(data);
+//                            final Uri uri = FileUtils.onPictureTaken(data);
 //                            new Thread(new Runnable() {
 //								
 //								@Override

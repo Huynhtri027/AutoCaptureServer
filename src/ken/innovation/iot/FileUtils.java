@@ -10,7 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 
-public class CameraUtils {
+public class FileUtils {
 	
 	public static Uri saveBitmap(Bitmap bitmap) throws IOException{
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -26,15 +26,38 @@ public class CameraUtils {
 		// remember close de FileOutput
 		fo.close();
 		bitmap.recycle();
-		LogUtils.appendLog("Save bitmap: " + fileName);
+		LogUtils.appendLog("Save bitmap: " + f.getPath());
 		return returnUri;
+	}
+	
+	public static Uri saveImage(byte[] data) throws IOException{
+		String fileName = System.currentTimeMillis() + ".jpeg";
+		File f = new File(getDataPath() + fileName);
+		Uri returnUri = Uri.fromFile(f);
+		f.createNewFile();
+		//write the bytes in file
+		FileOutputStream fo = new FileOutputStream(f);
+		fo.write(data);
+
+		// remember close de FileOutput
+		fo.close();
+		LogUtils.appendLog("Save bitmap: " + f.getPath());
+		return returnUri;
+	}
+	
+	public static void deleteFile(String[] files){
+		for (String file : files){
+			File f = new File(file);
+			if (f.exists()){
+				f.delete();
+			}
+		}
 	}
 	
 
 	public static Uri onPictureTaken(byte[] data) {
-		Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data .length);
 		try {
-			return saveBitmap(bitmap);
+			return saveImage(data);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -46,7 +69,7 @@ public class CameraUtils {
 		return (root.exists() && root.canWrite());
 	}
 	public static String getPackagePath(){
-		return CameraUtils.class.getPackage().getName();
+		return FileUtils.class.getPackage().getName();
 	}
 	public static String getDataPath() {
 		String dataFolderPath;

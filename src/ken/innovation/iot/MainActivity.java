@@ -11,6 +11,7 @@ import android.hardware.Camera.PictureCallback;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -28,6 +29,10 @@ public class MainActivity extends Activity{
 	LinearLayout surfaceLayout;
 	
 	ArrayList<String> adds = new ArrayList<>();
+	
+	public CaptureWakeTask captureTask = new CaptureWakeTask();
+	
+	
 	
 
 	@SuppressLint("NewApi")
@@ -68,43 +73,17 @@ public class MainActivity extends Activity{
 			}
 		});
 		
-		final EditText modText = (EditText) findViewById(R.id.mod_ip_text);
-		Button changeBut = (Button) findViewById(R.id.change_mod_ip);
-		Button conBut = (Button) findViewById(R.id.connect_mod);
-		checkHost(modText);
-		changeBut.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if (adds.size() > 1){
-					adds.remove(0);
-					modText.setText(adds.get(0));
-				} else {
-					checkHost(modText);
-				}
-			}
-		});
-		conBut.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String ip = modText.getText().toString();
-				if (ip.length() > 0){
-					//TODO connect
-				}
-			}
-		});
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-			requestPermissions(new String[]{"android.permission.CAMERA"}, 0);
-		}
-		
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+//			requestPermissions(new String[]{"android.permission.CAMERA"}, 0);
+//		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		server.onDestroy();
+		captureTask.stopCapture();
+		System.exit(0);
 	}
 
 	
@@ -144,7 +123,7 @@ public class MainActivity extends Activity{
                         @Override
                         public void onPictureTaken(byte[] data, Camera camera) {
                         	LogUtils.appendLog("4. Took picture");
-                            final Uri uri = CameraUtils.onPictureTaken(data);
+                            final Uri uri = FileUtils.onPictureTaken(data);
                             new Thread(new Runnable() {
 								
 								@Override
@@ -173,36 +152,68 @@ public class MainActivity extends Activity{
         surfaceLayout.removeAllViews();
         surfaceLayout.addView(preview, new LinearLayout.LayoutParams(1, 1));
     }
+	
+	public class CaptureWakeTask extends Thread {
+		private boolean stop = false;
+		private boolean restart = false;
+		private Object lock = new Object();
+		
+		public void startCapture(){
+			try {
+				start();
+			} catch (IllegalThreadStateException e) {
+				restart = true;
+				synchronized (lock) {
+					lock.notify();
+				}
+			}
+		}
+		
+		public void stopCapture(){
+			stop = true;
+			synchronized (lock) {
+				lock.notify();
+			}
+		}
+		
+		@Override
+		public void run() {
+			while(!stop){
+				restart = false;
+				MainActivity.this.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						MainActivity.this.takePhoto();
+					}
+				});
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (!restart && !stop){
+					try {
+						synchronized (lock) {
+							lock.wait();
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 
-    
+    private GMailSender sender = new GMailSender("neklaken@gmail.com", "Kennguyen@6690#");
     private void sendMail(String fileName){
-    	GMailSender sender = new GMailSender("neklaken@gmail.com", "Kennguyen@6690#");
 		try {
-			sender.sendMail("This is Subject",   
-					"This is Body",   
-					"kennguyen.hut@gmail.com,khanhnq2@vng.com.vn", new String[]{fileName});
+			sender.sendMail("Home has theft!",   
+					"Becareful!",   
+					" thiefdetector@googlegroups.com", new String[]{fileName});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
     }
     
-    private void checkHost(final EditText et){
-    	WiFiUtils.checkHosts("192.168.1", new ValueCallback<ArrayList<String>>() {
-			
-			@Override
-			public void onReceiveValue(final ArrayList<String> value) {
-				runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						adds.clear();
-						adds.addAll(value);
-						if (adds.size() > 0){
-							et.setText(adds.get(0));
-						}
-					}
-				});
-			}
-		});
-    }
 }

@@ -12,37 +12,6 @@
         android:layout_height="wrap_content"
         />
     
-    <LinearLayout 
-        android:id="@+id/con_mod_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-            <Button 
-                android:id="@+id/change_mod_ip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Change"
-                />
-            <EditText 
-                android:id="@+id/mod_ip_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="MODULE ADDRESS"
-                />
-        </LinearLayout>
-        <Button 
-                android:id="@+id/connect_mod"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Connect"
-                />
-    </LinearLayout>
     
   	<LinearLayout
   	    android:id="@+id/testLayout"

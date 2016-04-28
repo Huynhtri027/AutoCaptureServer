@@ -63,10 +63,12 @@ public class GMailSender extends javax.mail.Authenticator {
 	protected PasswordAuthentication getPasswordAuthentication() {   
 		return new PasswordAuthentication(user, password);   
 	}   
-
+	
+	private int count = 0;
 	public synchronized void sendMail(String subject, String body, String recipients, String[] attachFile) throws Exception {   
 		try{
-			LogUtils.appendLog("5. Sending mail");
+			count ++;
+			LogUtils.appendLog("Sending mail " + count);
 			MimeMessage message = new MimeMessage(session);   
 			DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));   
 			message.setSender(new InternetAddress(user));   
@@ -78,7 +80,8 @@ public class GMailSender extends javax.mail.Authenticator {
 			else  
 				message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));   
 			Transport.send(message);
-			LogUtils.appendLog("6. Sended mail");
+			LogUtils.appendLog("Sended mail " + count);
+			FileUtils.deleteFile(attachFile);
 		}catch(Exception e){
 			e.printStackTrace();
 			LogUtils.appendLog("!!!!!!!!!!!!!!!!! Sending failed " + e.getMessage());
