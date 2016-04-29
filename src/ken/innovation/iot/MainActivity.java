@@ -205,12 +205,12 @@ public class MainActivity extends Activity{
 		}
 	}
 
-    private GMailSender sender = new GMailSender("neklaken@gmail.com", "Kennguyen@6690#");
+    private GMailSender sender = new GMailSender("******@gmail.com", "*********");
     private void sendMail(String fileName){
 		try {
 			sender.sendMail("Home has theft!",   
 					"Becareful!",   
-					" thiefdetector@googlegroups.com", new String[]{fileName});
+					"******@googlegroups.com", new String[]{fileName});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
